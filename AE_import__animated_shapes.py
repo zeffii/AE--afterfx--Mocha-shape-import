@@ -80,21 +80,38 @@ def parse_file(file):
     include much error checking yet 
     '''
     # setup empty dictionary
-    # keys: use strings for shape names like 'Shape #1'
-    # values: use lists to store
+    shapes_and_states = {}
     
-    # Parse:
-    #       #1	Shape data
+    # keys: use strings for shape names like 'Shape data #1'
+    # values: use lists to store
+    shape_name = "Shape data "
+    shape_track_token = 0
+    key_to_check = ""
     
     for line in file:  
         current_line = line  
-        
+
+
+        # deal
+
+        # Parse:     #1	Shape data        
         if current_line.find("Shape data\n") != -1:
             shape_data = re.search("(#\d+)\sShape data\n", current_line)
             if shape_data.group(1) != None:
+                
+                # add key if not present
+                key_to_check = shape_name + shape_data.group(1)
+                if key_to_check not in shapes_and_states:
+                    shapes_and_states[key_to_check] = []
+                else:
+                    print("Duplicate shape names found, abort parsing")
+                    return None
+                
                 print(current_line)
+
         
-        
+                
+        # TODO read this again.
         if current_line.find("XSpline") != -1:
         
             # record the frame number.
@@ -111,10 +128,14 @@ def parse_file(file):
             line_to_strip = match.group(1)  
             points = re.findall('(\(.*?\))', line_to_strip)  
               
+            # shapes_and_states[key_to_check].append(frames_and_states_per_shape)  
+              
             #print(len(points))  
             #for point in points:  
             #    print(point)  
             #print("="*40)          
+    
+    print(shapes_and_states)
           
     # TODO[ ]    
     # if the file doesn't appear to contain any animated data that we
