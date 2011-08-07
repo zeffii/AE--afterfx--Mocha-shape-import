@@ -122,7 +122,7 @@ def parse_file(file):
                 print("frame:", frame)
           
           
-            # pick part the part of the line that deals with geometry 
+            # digest the part of the line that deals with geometry 
             match = re.search("XSpline\((.+)\)\n", current_line)  
               
             line_to_strip = match.group(1)  
