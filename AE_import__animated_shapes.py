@@ -128,7 +128,10 @@ def parse_file(file):
             line_to_strip = match.group(1)  
             points = re.findall('(\(.*?\))', line_to_strip)  
               
-            # shapes_and_states[key_to_check].append(frames_and_states_per_shape)  
+            # shapes_and_states[key_to_check].append(frames_and_states_per_shape)
+            
+            # be sure to check the content of this line, to prevent malicious code
+            # from being evaluated.
             # tb = eval("(1,3,5,6)")
               
             #print(len(points))  
