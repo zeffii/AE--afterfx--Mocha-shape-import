@@ -129,6 +129,7 @@ def parse_file(file):
             points = re.findall('(\(.*?\))', line_to_strip)  
               
             # shapes_and_states[key_to_check].append(frames_and_states_per_shape)  
+            # tb = eval("(1,3,5,6)")
               
             #print(len(points))  
             #for point in points:  
