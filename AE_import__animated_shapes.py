@@ -148,29 +148,29 @@ def parse_file(file):
             # assumption, that frames are integer only, not subframe float
             frame = re.search("\s*(\d*)\s*XSpline", current_line)
             if frame.group(1) != None:
-                # let's make it start at 0 instead of 1
+                # start at 0 instead of 1
                 frame = int(frame.group(1))-1
-                print("frame:", frame)
+                # print("frame:", frame)
           
           
             # digest the part of the line that deals with geometry 
             match = re.search("XSpline\((.+)\)\n", current_line)  
-              
             line_to_strip = match.group(1)  
             points = re.findall('(\(.*?\))', line_to_strip)  
-            
-            # massive assumption, do all frame paths start at frame 0?
-            # perhaps store the frame number with the xspline?
-            state_of_shape = XSpline_eval(points)
-            # shapes_and_states[key_to_check].append(frames_and_states_per_shape)
-            # shapes_and_states[key_to_check].append(states_of_shape)
-            
-    
-    print(shapes_and_states)
-          
-    # TODO[ ]    
+  
+            # perhaps store the frame number with the xspline? necessary?
+            states_of_shape = XSpline_eval(points)
+                        
+            # shapes_and_states[key_to_check].append(frames_and_states)
+            shapes_and_states[key_to_check].append(states_of_shape)
+
+    # cleanup before return to calling function         
     # if the file doesn't appear to contain any animated data that we
     # know how to parse, then the dictionary remains empty or we return None
+    if len(shapes_and_states) == 0:
+        return None
+    else:
+        return shapes_and_states
 
 
 
@@ -196,12 +196,16 @@ def init_fileparsing(data_directory, data_file):
         return
 
     # get all shape data (shapes/frames)
-    parse_details = parse_file(file)
+    shapes_and_states = parse_file(file)
 
-    #if parse_details != None:
-    #    for shape in parse_details:
-    #        print(shape)
-        
+    if shapes_and_states != None:
+        for shape in shapes_and_states:
+            # print(shape, shapes_and_states[shape])
+            print(shape, "w/", len(shapes_and_states[shape]), "frames of data")
+    else:
+        print("check the source file for congruency with the desired format")      
+        print("Ending routine")
+        return 
 
 
 
