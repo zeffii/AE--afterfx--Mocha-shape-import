@@ -40,6 +40,7 @@ def XSpline_eval(points):
     for point in points:  
         point = point[1:-1]
         point = point.split(",")
+        # point is now a list of string based arguments
 
         # LOW PRIORITY
         # [TODO] maybe rewrite to deal with the last param of point as a bool
@@ -143,8 +144,7 @@ def parse_file(file):
             # assumption, that frames are integer only, not subframe float
             frame = re.search("\s*(\d*)\s*XSpline", current_line)
             if frame.group(1) != None:
-                # start at 0 instead of 1
-                frame = int(frame.group(1))-1
+                frame = int(frame.group(1)) # -1
                   
             # digest the part of the line that deals with geometry 
             match = re.search("XSpline\((.+)\)\n", current_line)  
