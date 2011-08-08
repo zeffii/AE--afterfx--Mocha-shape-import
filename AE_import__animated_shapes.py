@@ -40,7 +40,6 @@ def XSpline_eval(points):
     for point in points:  
         point = point[1:-1]
         point = point.split(",")
-        # point is now a list of string based arguments
 
         # LOW PRIORITY
         # [TODO] maybe rewrite to deal with the last param of point as a bool
@@ -160,7 +159,7 @@ def parse_file(file):
 
     # cleanup before return to calling function         
     # if the file doesn't appear to contain any animated data that we
-    # know how to parse, then the dictionary remains empty or we return None
+    # know how to parse, then the dictionary remains empty and we return None
     if len(shapes_and_states) == 0:
         return None
     else:
