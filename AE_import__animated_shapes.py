@@ -25,6 +25,35 @@ you can contact me at blenderscripting.blogspot
 import re  
   
 
+
+def XSpline_eval(points):
+    ''' avoids using eval, this step might be a little paranoid
+    
+    XSpline_eval() takes a list of Point(*args) in the form of a string like
+    (x,y,k1,k2,sBool) and converts it to a list of tuple(floats)
+    
+    straight eval was possible, but it introduces security vulnerabilities.
+    
+    '''
+    
+    point_list = []  
+    for point in points:  
+        point = point[1:-1]
+        point = point.split(",")
+        
+        # point is now a list of arguments
+        point_arguments = []
+        for element in point:
+            point_arguments.append(float(element))
+
+        # convert to tuple, and append to list
+        point_arguments = tuple(point_arguments)
+        point_list.append(point_arguments)
+    
+    return point_list
+
+
+
 def get_file_info(file):
     '''This checks file for information as described in file_details below'''
 
@@ -114,10 +143,11 @@ def parse_file(file):
         # TODO read this again.
         if current_line.find("XSpline") != -1:
         
-            # [=] todo: extract frame number, store it 
+            # assumption, that frames are integer only, not subframe float
             frame = re.search("\s*(\d*)\s*XSpline", current_line)
             if frame.group(1) != None:
-                frame = frame.group(1)
+                # let's make it start at 0 instead of 1
+                frame = int(frame.group(1))-1
                 print("frame:", frame)
           
           
@@ -126,17 +156,13 @@ def parse_file(file):
               
             line_to_strip = match.group(1)  
             points = re.findall('(\(.*?\))', line_to_strip)  
-              
-            # shapes_and_states[key_to_check].append(frames_and_states_per_shape)
             
-            # be sure to check the content of this line, to prevent malicious code
-            # from being evaluated.
-            # tb = eval("(1,3,5,6)")
-              
-            #print(len(points))  
-            #for point in points:  
-            #    print(point)  
-            #print("="*40)          
+            # massive assumption, do all frame paths start at frame 0?
+            # perhaps store the frame number with the xspline?
+            state_of_shape = XSpline_eval(points)
+            # shapes_and_states[key_to_check].append(frames_and_states_per_shape)
+            # shapes_and_states[key_to_check].append(states_of_shape)
+            
     
     print(shapes_and_states)
           
