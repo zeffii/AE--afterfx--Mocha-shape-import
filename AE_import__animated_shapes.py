@@ -109,6 +109,8 @@ def get_file_info(file):
 def parse_file(file):
     ''' this gathers the shape details, and frame number but does not 
     include much error checking yet 
+    
+    at present this does not parse translation/scale/sheer.
     '''
     # setup empty dictionary
     shapes_and_states = {}
@@ -186,6 +188,9 @@ def init_fileparsing(data_directory, data_file):
 
     # get all shape data (shapes/frames)
     shapes_and_states = parse_file(file)
+    
+    # whatever the result, we no longer need the file open on disk.
+    file.close()
 
     if shapes_and_states != None:
         for shape in shapes_and_states:
@@ -195,12 +200,8 @@ def init_fileparsing(data_directory, data_file):
         print("check the source file for congruency with the desired format")      
         print("Ending routine")
         return 
-    
-    # space
-
-    # remember to close the file
-    file.close()    
-
+   
+    return
 
 
 
