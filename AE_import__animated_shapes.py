@@ -40,8 +40,10 @@ def XSpline_eval(points):
     for point in points:  
         point = point[1:-1]
         point = point.split(",")
-        
-        # point is now a list of arguments
+        # point is now a list of string based arguments
+
+        # LOW PRIORITY
+        # [TODO] maybe rewrite to deal with the last param of point as a bool
         point_arguments = []
         for element in point:
             point_arguments.append(float(element))
