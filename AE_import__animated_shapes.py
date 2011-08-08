@@ -122,10 +122,7 @@ def parse_file(file):
     for line in file:  
         current_line = line  
 
-
-        # deal
-
-        # Parse:     #1	Shape data        
+        # Parse:     #n	Shape data, where n is a number
         if current_line.find("Shape data\n") != -1:
             shape_data = re.search("(#\d+)\sShape data\n", current_line)
             if shape_data.group(1) != None:
@@ -138,11 +135,8 @@ def parse_file(file):
                     print("Duplicate shape names found, abort parsing")
                     return None
                 
-                print(current_line)
 
-        
-                
-        # TODO read this again.
+        # Parse: the content of the line containing the XSpline details
         if current_line.find("XSpline") != -1:
         
             # assumption, that frames are integer only, not subframe float
@@ -150,9 +144,7 @@ def parse_file(file):
             if frame.group(1) != None:
                 # start at 0 instead of 1
                 frame = int(frame.group(1))-1
-                # print("frame:", frame)
-          
-          
+                  
             # digest the part of the line that deals with geometry 
             match = re.search("XSpline\((.+)\)\n", current_line)  
             line_to_strip = match.group(1)  
@@ -171,9 +163,6 @@ def parse_file(file):
         return None
     else:
         return shapes_and_states
-
-
-
 
 
 
@@ -206,9 +195,8 @@ def init_fileparsing(data_directory, data_file):
         print("check the source file for congruency with the desired format")      
         print("Ending routine")
         return 
-
-
-
+    
+    # space
 
     # remember to close the file
     file.close()    
