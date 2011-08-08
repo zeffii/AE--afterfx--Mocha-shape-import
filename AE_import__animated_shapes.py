@@ -114,8 +114,7 @@ def parse_file(file):
         # TODO read this again.
         if current_line.find("XSpline") != -1:
         
-            # record the frame number.
-            
+            # [=] todo: extract frame number, store it 
             frame = re.search("\s*(\d*)\s*XSpline", current_line)
             if frame.group(1) != None:
                 frame = frame.group(1)
