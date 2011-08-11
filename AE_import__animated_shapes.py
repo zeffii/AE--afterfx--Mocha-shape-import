@@ -168,29 +168,37 @@ def parse_file(file):
         return shapes_and_states
 
 
-
-def create_shape_and_keyframes(shape, frames):
+# helper routine
+def get_coordinates_from_state(state):
     
     width = file_details['Source Width']
     height = file_details['Source Height']
+    
+    coord_list = []        
+    for coordinate in state:
+        x = coordinate[0] * width
+        y = coordinate[1] * height
+        coVec = Vector((x,y,0.0, 1.0))
+        coord_list.append(coVec)
+    return coord_list
+
+
+
+def create_shape_and_keyframes(shape, frames):
+
+    # create the base shape, the same as first shape on frame 1
+
 
     iterator = 0 
     print(shape)
     for state in frames:
         print("frame", iterator)
-        for coordinate in state:
-            # for now only first 2 coordinates x,y
-            # print(coordinate[:2])
-            # need to adjust this to desired x and y of the footage.
-            x = coordinate[0] * width
-            y = coordinate[1] * height
-            
-            coVec = Vector((x,y,0.0, 1.0))
-            print(coVec)
-
+        print(get_coordinates_from_state(state))
+                
         iterator+=1
+        
+    # ending shape.    
     print("-----")
-    print(width, height)
 
 
 
