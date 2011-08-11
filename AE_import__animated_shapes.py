@@ -21,9 +21,11 @@ you can contact me at blenderscripting.blogspot
 
 # coded verbosely for debug, thar be assumptions here.
 
-
+import bpy
+from mathutils import Vector
 import re  
-  
+
+file_details = {}  
 
 
 def XSpline_eval(points):
@@ -93,7 +95,8 @@ def get_file_info(file):
     if file_validity_counter != 5:
         print("File contains unpredicted information, parsing ended")  
         return None
-    
+
+    global file_details
     file_details = {    "Frames Per Second": fps,
                         "Source Width": source_width,
                         "Source Height": source_height,
@@ -167,6 +170,9 @@ def parse_file(file):
 
 
 def create_shape_and_keyframes(shape, frames):
+    
+    width = file_details['Source Width']
+    height = file_details['Source Height']
 
     iterator = 0 
     print(shape)
@@ -174,11 +180,17 @@ def create_shape_and_keyframes(shape, frames):
         print("frame", iterator)
         for coordinate in state:
             # for now only first 2 coordinates x,y
-            print(coordinate[:2])
+            # print(coordinate[:2])
+            # need to adjust this to desired x and y of the footage.
+            x = coordinate[0] * width
+            y = coordinate[1] * height
+            
+            coVec = Vector((x,y,0.0, 1.0))
+            print(coVec)
 
         iterator+=1
     print("-----")
-
+    print(width, height)
 
 
 
