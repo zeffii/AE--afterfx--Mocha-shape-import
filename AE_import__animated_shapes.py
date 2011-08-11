@@ -166,6 +166,22 @@ def parse_file(file):
 
 
 
+def create_shape_and_keyframes(shape, frames):
+
+    iterator = 0 
+    print(shape)
+    for state in frames:
+        print("frame", iterator)
+        for coordinate in state:
+            # for now only first 2 coordinates x,y
+            print(coordinate[:2])
+
+        iterator+=1
+    print("-----")
+
+
+
+
 def init_fileparsing(data_directory, data_file):
     fullpath = data_directory + data_file  
 
@@ -192,13 +208,20 @@ def init_fileparsing(data_directory, data_file):
 
     if shapes_and_states != None:
         for shape in shapes_and_states:
-            # print(shape, shapes_and_states[shape])
-            print(shape, "w/", len(shapes_and_states[shape]), "frames of data")
+            create_shape_and_keyframes(shape, shapes_and_states[shape])
     else:
-        print("check the source file for congruency with the desired format")      
+        print("check the source file for congruency with desired format")
         print("Ending routine")
         return 
    
+    # display some information, size of shape and how many frames each shape has
+    print("gathered", len(shapes_and_states), "shapes")
+    for shape in shapes_and_states:
+        num_frames = len(shapes_and_states[shape])
+        coords = len(shapes_and_states[shape][0])
+        fdx = "frames of data and xspline("
+        print(shape, "w/",num_frames,fdx,coords,"points )")
+    
     return
 
 
