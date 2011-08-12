@@ -163,9 +163,7 @@ def parse_file(file):
             states_of_shape = XSpline_eval(points)
             shapes_and_states[key_to_check].append(states_of_shape)
 
-    # cleanup before return to calling function         
-    # if the file doesn't appear to contain any animated data that we
-    # know how to parse, then the dictionary remains empty and we return None
+    # cleanup before return to calling function, return None if unsuccessfull
     if len(shapes_and_states) == 0:
         return None
     else:
@@ -246,7 +244,9 @@ def create_shape_and_keyframes(shape, frames):
                 
         frame_num+=1
         
-    # ending shape.    
+    # ending shape, unselect everything
+    bpy.ops.object.mode_set(mode = 'OBJECT')    
+    bpy.ops.object.select_all(action='TOGGLE')
     print("-----")
 
 
