@@ -229,25 +229,21 @@ def create_shape_and_keyframes(shape, frames):
     # keyframe the shape
     Spline = polyface.data.splines[0]
     frame_num = 0 
-    print(shape)
+    # print(shape)
     for state in frames:
-        #print("frame", iterator)
-        #print(get_coordinates_from_state(state))
         coordinates =  get_coordinates_from_state(state)
         bpy.context.scene.frame_set(frame_num)
         iterator = 0
         for coord in Spline.points:
             coord.co = coordinates[iterator]
             coord.keyframe_insert('co')
-        
             iterator += 1 
-                
         frame_num+=1
         
     # ending shape, unselect everything
     bpy.ops.object.mode_set(mode = 'OBJECT')    
     bpy.ops.object.select_all(action='TOGGLE')
-    print("-----")
+    # print("-----")
 
 
 
