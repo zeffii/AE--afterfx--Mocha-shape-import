@@ -1,3 +1,3 @@
-    - woop  
-    - woop2  
-    - woop2  
+    - reads and imports .ae file originating from mocha or after effects (i think)  
+    - creates a shape and the propegated shape over time using keyframes
+    - currently only supports straight poly, not bezier or XSpline (requires a bit of reading!)
