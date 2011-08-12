@@ -21,6 +21,11 @@ you can contact me at blenderscripting.blogspot
 
 # coded verbosely for debug, thar be assumptions here.
 
+# TODO.
+# set render dimensions
+# position camera, set ortho
+# provide option to import footage, place it in a useful location.
+
 import bpy
 from mathutils import Vector
 import re  
@@ -181,26 +186,65 @@ def get_coordinates_from_state(state):
     
     coord_list = []        
     for coordinate in state:
-        x = coordinate[0] * width
-        y = coordinate[1] * height
+        x = coordinate[0] # * width
+        y = coordinate[1] # * height
         coVec = Vector((x,y,0.0, 1.0))
         coord_list.append(coVec)
     return coord_list
 
 
 
+# create a spline curve from a number of points
+def MakePolyFace(objname, curvename, cList):
+    curvedata = bpy.data.curves.new(name=curvename, type='CURVE')
+    curvedata.dimensions = '2D'
+
+    objectdata = bpy.data.objects.new(objname, curvedata)
+    objectdata.location = (0,0,0) #object origin
+    bpy.context.scene.objects.link(objectdata)
+
+    polyline = curvedata.splines.new('POLY')
+    polyline.points.add(len(cList)-1)
+
+    for num in range(len(cList)):
+        polyline.points[num].co = (cList[num])
+        
+    polyline.order_u = len(polyline.points)-1  
+    polyline.use_endpoint_u = True
+    polyline.use_cyclic_u = True 
+
+
+
 def create_shape_and_keyframes(shape, frames):
 
     # create the base shape, the same as first shape on frame 1
+    shapename, shapecurvename = shape, ("curve "+shape)
+    coordinate_list = get_coordinates_from_state(frames[0])    
+    MakePolyFace(shapename, shapecurvename, coordinate_list)
 
-
-    iterator = 0 
+    # with this object active and selected, create keyframes for its states.
+    bpy.context.scene.objects.active = bpy.data.objects[shape]
+    polyface = bpy.context.active_object
+    polyface.select = True
+    bpy.ops.object.mode_set(mode = 'EDIT')
+    
+    # keyframe the shape
+    Spline = polyface.data.splines[0]
+    frame_num = 0 
     print(shape)
     for state in frames:
         #print("frame", iterator)
         #print(get_coordinates_from_state(state))
+        coordinates =  get_coordinates_from_state(state)
+        bpy.context.scene.frame_set(frame_num)
+        iterator = 0
+        for coord in Spline.points:
+            coord.co = coordinates[iterator]
+            coord.keyframe_insert('co')
+        
+            iterator += 1 
                 
-        iterator+=1
+        frame_num+=1
         
     # ending shape.    
     print("-----")
