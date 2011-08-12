@@ -103,7 +103,8 @@ def get_file_info(file):
                         "Source Pixel Aspect Ratio": source_px_aspect,
                         "Comp Pixel Aspect Ratio": comp_aspect}
     
-    print("Phase 1 of parsing complete, file details found, looking good")        
+    print("Phase 1 of parsing complete, file details found, looking good")
+    
     return file_details
 
 
@@ -120,13 +121,12 @@ def parse_file(file):
     # keys: use strings for shape names like 'Shape data #1'
     # values: use lists to store
     shape_name = "Shape data "
-    shape_track_token = 0
     key_to_check = ""
     
     for line in file:  
         current_line = line  
 
-        # Parse:     #n	Shape data, where n is a number
+        # Parse:     #n	Shape data, where n is the shape index
         if current_line.find("Shape data\n") != -1:
             shape_data = re.search("(#\d+)\sShape data\n", current_line)
             if shape_data.group(1) != None:
@@ -146,17 +146,16 @@ def parse_file(file):
             # assumption, that frames are integer only, not subframe float
             frame = re.search("\s*(\d*)\s*XSpline", current_line)
             if frame.group(1) != None:
-                frame = int(frame.group(1)) # -1
+                frame = int(frame.group(1))
                   
-            # digest the part of the line that deals with geometry 
+            # extract points from XSpline(....) 
             match = re.search("XSpline\((.+)\)\n", current_line)  
             line_to_strip = match.group(1)  
             points = re.findall('(\(.*?\))', line_to_strip)  
   
             # perhaps store the frame number with the xspline? necessary?
+            # [TODO implement anyway.]
             states_of_shape = XSpline_eval(points)
-                        
-            # shapes_and_states[key_to_check].append(frames_and_states)
             shapes_and_states[key_to_check].append(states_of_shape)
 
     # cleanup before return to calling function         
@@ -192,8 +191,8 @@ def create_shape_and_keyframes(shape, frames):
     iterator = 0 
     print(shape)
     for state in frames:
-        print("frame", iterator)
-        print(get_coordinates_from_state(state))
+        #print("frame", iterator)
+        #print(get_coordinates_from_state(state))
                 
         iterator+=1
         
@@ -212,36 +211,35 @@ def init_fileparsing(data_directory, data_file):
 
     # check the file
     file_details = get_file_info(file)
-    if file_details != None:
-        for key in file_details:
-            print(">", key, file_details[key])
-    else:
+    if file_details == None:
         file.close()
         print("Exited file parsing routine")
         return
 
-    # get all shape data (shapes/frames)
+    # get all shape data (shapes/frames), then file can be closed
     shapes_and_states = parse_file(file)
-    
-    # whatever the result, we no longer need the file open on disk.
     file.close()
 
     if shapes_and_states != None:
+        # for each shape found in file, create and keyframe its motion.
         for shape in shapes_and_states:
             create_shape_and_keyframes(shape, shapes_and_states[shape])
     else:
-        print("check the source file for congruency with desired format")
-        print("Ending routine")
+        print("Source file not congruent with desired format, aborting")
         return 
    
-    # display some information, size of shape and how many frames each shape has
+    # display information: numframes and numpoints of shape
     print("gathered", len(shapes_and_states), "shapes")
     for shape in shapes_and_states:
         num_frames = len(shapes_and_states[shape])
         coords = len(shapes_and_states[shape][0])
         fdx = "frames of data and xspline("
         print(shape, "w/",num_frames,fdx,coords,"points )")
+        
+    for key in file_details:
+            print(">", key, file_details[key])
     
+        
     return
 
 
