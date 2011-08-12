@@ -169,6 +169,12 @@ def parse_file(file):
 
 # helper routine
 def get_coordinates_from_state(state):
+    ''' takes list of Points from a line in XSpline form, returns Vector list. 
+
+        TODO, this should eventually parse the state and approximate
+        the intended spline shape, at present it is a barbaric function.
+        
+    '''
     
     width = file_details['Source Width']
     height = file_details['Source Height']
