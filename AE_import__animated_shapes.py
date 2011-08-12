@@ -69,23 +69,23 @@ def get_file_info(file):
         
         # FPS
         if current_line.find("Units Per Second") != -1:
-            fps = line_split = float(current_line.split()[-1])
+            fps = float(current_line.split()[-1])
             file_validity_counter += 1
     
         # source dimensions
         if current_line.find("Source Width") != -1:
-            source_width = line_split = int(current_line.split()[-1])
+            source_width = int(current_line.split()[-1])
             file_validity_counter += 1
         if current_line.find("Source Height") != -1:
-            source_height = line_split = int(current_line.split()[-1])
+            source_height = int(current_line.split()[-1])
             file_validity_counter += 1
     
         # aspect ratios
         if current_line.find("Source Pixel Aspect Ratio") != -1:
-            source_px_aspect = line_split = float(current_line.split()[-1])
+            source_px_aspect = float(current_line.split()[-1])
             file_validity_counter += 1
         if current_line.find("Comp Pixel Aspect Ratio") != -1:
-            comp_aspect = line_split = float(current_line.split()[-1])
+            comp_aspect = float(current_line.split()[-1])
             file_validity_counter += 1
 
         # check up
