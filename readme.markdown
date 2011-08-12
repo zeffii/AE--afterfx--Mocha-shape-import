@@ -1,2 +1,0 @@
-    - basic mocha/after effects import of tracked data  
-    - currently only straight poly are supported, but soon bezier will too  
